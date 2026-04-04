@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Player Details</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+<div class="containerEdit">
+    <h2>Player Information</h2>
+
+    <div class="info-box">
+        <label>Player ID:</label>
+        <p th:text="${player.playerId}"></p>
+
+        <label>First Name:</label>
+        <p th:text="${player.firstName}"></p>
+
+        <label>Last Name:</label>
+        <p th:text="${player.lastName}"></p>
+
+        <label>Jersey Number:</label>
+        <p th:text="${player.jerseyNumber}"></p>
+
+        <label>Position:</label>
+        <p th:text="${player.position}"></p>
+
+        <label>Age:</label>
+        <p th:text="${player.age}"></p>
+
+        <label>Team ID:</label>
+        <p th:text="${player.teamId}"></p>
+    </div>
+
+    <div class="button-group">
+        <a th:href="@{'/player/edit/' + ${player.playerId}}" class="btn btn-save">Edit Player</a>
+        <a th:href="@{'/player'}" class="btn btn-back">Back</a>
+    </div>
+</div>
+</body>
+</html>

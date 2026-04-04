@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Players List</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+<div class="containerTeam">
+
+    <h2>Player List</h2>
+
+    <a href="/player/new" class="btn btn-add">Add New Player</a>
+    <a href="/" class="btn btn-back">Back</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Jersey</th>
+            <th>Age</th>
+            <th>Team ID</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="p : ${player}">
+            <td th:text="${p.playerId}"></td>
+            <td th:text="${p.firstName + ' ' + p.lastName}"></td>
+            <td th:text="${p.position}"></td>
+            <td th:text="${p.jerseyNumber}"></td>
+
+            <td th:text="${p.age}"></td>
+            <td th:text="${p.teamId}"></td>
+
+            <td>
+                <a th:href="@{'/player/' + ${p.playerId}}" class="btn btn-view">Show</a>
+                <a th:href="@{'/player/edit/' + ${p.playerId}}" class="btn btn-edit">Edit</a>
+                <a th:href="@{'/player/delete/' + ${p.playerId}}" class="btn btn-delete">Delete</a>
+            </td>
+        </tr>
+        
+        </tbody>
+           
+    </table>
+
+</div>
+</body>
+</html>

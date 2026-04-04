@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add New Player</title>
+     <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+<div class="containerEdit">
+    <h2>Add New Player</h2>
+
+    <form th:action="@{/player}" method="post" th:object="${player}">
+
+        <label>Player ID</label>
+        <input type="number" th:field="*{playerId}" required />
+
+        <label>First Name</label>
+        <input type="text" th:field="*{firstName}" required />
+
+        <label>Last Name</label>
+        <input type="text" th:field="*{lastName}" required />
+
+        <label>Position</label>
+        <input type="text" th:field="*{position}" required />
+
+        <label>Jersey Number</label>
+        <input type="number" th:field="*{jerseyNumber}" required />
+
+        <label>Age</label>
+        <input type="number" th:field="*{age}" required />
+
+        <label>Team ID</label>
+        <input type="number" th:field="*{teamId}" required />
+
+        <button type="submit" class="btn btn-save">Save Player</button>
+        <button type="button" class="btn btn-back"
+                onclick="window.location.href='/player'">
+            Cancel
+        </button>
+
+    </form>
+</div>
+</body>
+</html>
+

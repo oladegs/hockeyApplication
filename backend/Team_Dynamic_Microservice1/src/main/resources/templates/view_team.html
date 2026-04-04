@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Teams</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        
+    </style>
+</head>
+
+<body>
+<div class="containerTeam">
+    <h2>Teams List</h2>
+
+    <a href="/team/new" class="btn btn-add">Add New Team</a>
+     <a href="/" class="btn btn-back">Back</a>
+    
+    
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Founded</th>
+            <th>Coach</th>
+            <th>Actions</th>
+        </tr>
+
+        <tr th:each="t : ${team}">
+            <td th:text="${t.teamId}"></td>
+            <td th:text="${t.teamName}"></td>
+            <td th:text="${t.teamCity}"></td>
+            <td th:text="${t.teamFounded}"></td>
+            <td th:text="${t.coachName}"></td>
+
+            <td>
+               
+                <a th:href="@{'/team/edit/' + ${t.teamId}}" class="btn btn-edit">Edit</a>
+                <a th:href="@{'/team/delete/' + ${t.teamId}}" class="btn btn-delete">Delete</a>
+                <a th:href="@{'/team/' + ${t.teamId}}" class="btn btn-view">View</a>
+                
+                
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
