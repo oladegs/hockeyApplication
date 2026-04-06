@@ -17,18 +17,31 @@ import {
 function PlayersList() {
   const [players, setPlayers] = useState([]);
   const [searchId, setSearchId] = useState("");
+  const [error, setError] = useState("");
 
-  const loadPlayers = () => {
-    api.get("/players").then((res) => setPlayers(res.data));
+  const loadPlayers = async () => {
+    try {
+      setError("");
+      const res = await api.get("/players");
+      setPlayers(res.data || []);
+    } catch (err) {
+      setPlayers([]);
+      setError(err.message || "Unable to load players.");
+    }
   };
 
   useEffect(() => {
     loadPlayers();
   }, []);
 
-  const deletePlayer = (id) => {
+  const deletePlayer = async (id) => {
     if (window.confirm("Are you sure you want to delete this player?")) {
-      api.delete(`/players/${id}`).then(() => loadPlayers());
+      try {
+        await api.delete(`/players/${id}`);
+        loadPlayers();
+      } catch (err) {
+        window.alert(err.message || "Unable to delete player.");
+      }
     }
   };
 
@@ -38,10 +51,11 @@ function PlayersList() {
       return;
     }
     try {
+      setError("");
       const res = await api.get(`/players/${searchId}`);
       const player = res.data || res;
       setPlayers(player ? [player] : []);
-    } catch (err) {
+    } catch {
       window.alert("Player not found");
       setPlayers([]);
     }
@@ -91,6 +105,8 @@ function PlayersList() {
           </Link>
         </div>
       </div>
+
+      {error && <div className="alert alert-danger">{error}</div>}
 
       {/* Player Cards Grid */}
       {players.length > 0 ? (

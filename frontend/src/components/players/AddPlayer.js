@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 function AddPlayer() {
   const navigate = useNavigate();
   const { teamId } = useParams();
+  const [error, setError] = useState("");
   const [player, setPlayer] = useState({
     playerId: "",
     firstName: "",
@@ -20,9 +21,15 @@ function AddPlayer() {
   const handleChange = (e) =>
     setPlayer({ ...player, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.post("/players/add", player).then(() => navigate("/players"));
+    try {
+      setError("");
+      await api.post("/players/add", player);
+      navigate("/players");
+    } catch (err) {
+      setError(err.message || "Unable to add player.");
+    }
   };
 
   return (
@@ -30,6 +37,7 @@ function AddPlayer() {
       <h2>Add New Player</h2>
 
       <form onSubmit={handleSubmit} className="vertical-form">
+        {error && <div className="alert alert-danger">{error}</div>}
         <input
           name="playerId"
           type="number"

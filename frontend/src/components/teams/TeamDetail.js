@@ -32,12 +32,15 @@ function TeamDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!team) return;
     if (window.confirm("Are you sure you want to delete this team?")) {
-      api.delete(`/teams/${team.teamId}`).then(() => {
+      try {
+        await api.delete(`/teams/${team.teamId}`);
         window.location.href = "/teams";
-      });
+      } catch (err) {
+        setError(err.message || "Unable to delete team.");
+      }
     }
   };
 

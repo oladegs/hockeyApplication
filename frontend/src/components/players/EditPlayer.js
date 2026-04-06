@@ -1,4 +1,3 @@
-
 // export default EditPlayer;
 import React, { useEffect, useState } from "react";
 import api from "../../api";
@@ -8,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 function EditPlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const [player, setPlayer] = useState({
     playerId: "",
@@ -20,28 +20,47 @@ function EditPlayer() {
   });
 
   useEffect(() => {
-    api.get(`/players/${id}`).then((res) => setPlayer(res.data));
+    const fetchPlayer = async () => {
+      try {
+        setError("");
+        const res = await api.get(`/players/${id}`);
+        setPlayer(res.data || player);
+      } catch (err) {
+        setError(err.message || "Unable to load player.");
+      }
+    };
+
+    fetchPlayer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleChange = (e) =>
     setPlayer({ ...player, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.put(`/players/${id}`, player).then(() => navigate("/players"));
+    try {
+      setError("");
+      await api.put(`/players/${id}`, player);
+      navigate("/players");
+    } catch (err) {
+      setError(err.message || "Unable to update player.");
+    }
   };
 
   return (
     <div className="container mt-4" style={{ maxWidth: "700px" }}>
       <div className="card shadow-sm p-4">
-
         <h3 className="text-center fw-bold mb-4">Edit Player</h3>
 
         <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-danger">{error}</div>}
 
           {/* Player ID */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Player ID</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Player ID
+            </label>
             <div className="col-9">
               <input
                 name="playerId"
@@ -56,7 +75,9 @@ function EditPlayer() {
 
           {/* First Name */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">First Name</label>
+            <label className="col-3 col-form-label fw-semibold">
+              First Name
+            </label>
             <div className="col-9">
               <input
                 name="firstName"
@@ -70,7 +91,9 @@ function EditPlayer() {
 
           {/* Last Name */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Last Name</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Last Name
+            </label>
             <div className="col-9">
               <input
                 name="lastName"
@@ -145,7 +168,6 @@ function EditPlayer() {
           <div className="text-center mt-4">
             <button className="btn btn-primary btn-lg px-5">Update</button>
           </div>
-
         </form>
       </div>
     </div>

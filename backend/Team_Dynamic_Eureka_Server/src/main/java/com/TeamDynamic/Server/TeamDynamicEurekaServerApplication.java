@@ -17,7 +17,7 @@ public class TeamDynamicEurekaServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TeamDynamicEurekaServerApplication.class, args);
-        System.out.println("Eureka Server started.....");
+        System.out.println("Eureka Server Started !!!");
 	}
 
 }

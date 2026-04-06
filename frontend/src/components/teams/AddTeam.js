@@ -1,4 +1,3 @@
-
 // export default AddTeam;
 import React, { useState } from "react";
 import api from "../../api";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function AddTeam() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const [team, setTeam] = useState({
     teamId: "",
@@ -19,9 +19,15 @@ function AddTeam() {
   const handleChange = (e) =>
     setTeam({ ...team, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.post("/teams/add", team).then(() => navigate("/teams"));
+    try {
+      setError("");
+      await api.post("/teams/add", team);
+      navigate("/teams");
+    } catch (err) {
+      setError(err.message || "Unable to add team.");
+    }
   };
 
   return (
@@ -30,6 +36,7 @@ function AddTeam() {
         <h3 className="text-center fw-bold mb-4">Add New Team</h3>
 
         <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-danger">{error}</div>}
 
           {/* FORM ROW */}
           <div className="row mb-3 align-items-center">
@@ -47,7 +54,9 @@ function AddTeam() {
           </div>
 
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Team Name</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Team Name
+            </label>
             <div className="col-9">
               <input
                 name="teamName"
@@ -60,7 +69,9 @@ function AddTeam() {
           </div>
 
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Team City</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Team City
+            </label>
             <div className="col-9">
               <input
                 name="teamCity"
@@ -73,7 +84,9 @@ function AddTeam() {
           </div>
 
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Founded Year</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Founded Year
+            </label>
             <div className="col-9">
               <input
                 name="teamFounded"
@@ -87,7 +100,9 @@ function AddTeam() {
           </div>
 
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Coach Name</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Coach Name
+            </label>
             <div className="col-9">
               <input
                 name="coachName"
@@ -102,7 +117,6 @@ function AddTeam() {
           <div className="text-center mt-4">
             <button className="btn btn-primary btn-lg px-5">Submit</button>
           </div>
-
         </form>
       </div>
     </div>
@@ -110,4 +124,3 @@ function AddTeam() {
 }
 
 export default AddTeam;
-

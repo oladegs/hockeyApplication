@@ -18,7 +18,7 @@ public class TeamDynamicMicroservice1Application {
 		SpringApplication.run(TeamDynamicMicroservice1Application.class, args);
 		// System.setProperty("spring.config.name", "Team-Dynamic-Microservice1");
 			
-		 System.out.println("Spring Boot WebFlux Microservice1 has been satrted!!");
+		 System.out.println("Spring Boot application for Team Dynamic Microservice 1 has started successfully.");
 	}
 
 }

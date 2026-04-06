@@ -1,10 +1,26 @@
-// API client for the COMP303 Lab4 - Teams & Players React app.
-// Connects to Microservice 2 backend and was developed by Farouk O.
-// Microservices 1 developed by Muhammed . & Microservice 2 developed by Abdulrahman H.
 import axios from "axios";
 
+const apiBaseUrl =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:9084";
+
 const api = axios.create({
-  baseURL: "http://10.0.0.6:8084/", // Microservice 2 backend (update to match your environment)
+  baseURL: apiBaseUrl,
+  timeout: 10000,
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+    const message =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Request failed. Please check if the backend is running.";
+
+    return Promise.reject(
+      new Error(status ? `HTTP ${status}: ${message}` : message),
+    );
+  },
+);
 
 export default api;

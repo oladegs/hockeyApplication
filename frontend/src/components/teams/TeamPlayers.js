@@ -1,5 +1,5 @@
 // TeamPlayers: Shows one team's info and a table of its players.
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../../api";
 
@@ -16,23 +16,42 @@ function TeamPlayers() {
   const { id } = useParams(); // teamId from URL
   const [team, setTeam] = useState(null);
   const [players, setPlayers] = useState([]);
+  const [error, setError] = useState("");
 
-  const loadTeam = () => {
-    api.get(`/teams/${id}`).then((res) => setTeam(res.data));
-  };
-
-  const loadPlayers = () => {
-    api.get(`/teams/${id}/player`).then((res) => setPlayers(res.data));
-  };
-
-  useEffect(() => {
-    loadTeam();
-    loadPlayers();
+  const loadTeam = useCallback(async () => {
+    try {
+      const res = await api.get(`/teams/${id}`);
+      setTeam(res.data || null);
+    } catch (err) {
+      setTeam(null);
+      setError(err.message || "Unable to load team.");
+    }
   }, [id]);
 
-  const deletePlayer = (playerId) => {
+  const loadPlayers = useCallback(async () => {
+    try {
+      const res = await api.get(`/teams/${id}/player`);
+      setPlayers(res.data || []);
+    } catch (err) {
+      setPlayers([]);
+      setError(err.message || "Unable to load players for this team.");
+    }
+  }, [id]);
+
+  useEffect(() => {
+    setError("");
+    loadTeam();
+    loadPlayers();
+  }, [loadPlayers, loadTeam]);
+
+  const deletePlayer = async (playerId) => {
     if (window.confirm("Are you sure you want to delete this player?")) {
-      api.delete(`/players/${playerId}`).then(() => loadPlayers());
+      try {
+        await api.delete(`/players/${playerId}`);
+        loadPlayers();
+      } catch (err) {
+        window.alert(err.message || "Unable to delete player.");
+      }
     }
   };
 
@@ -66,6 +85,8 @@ function TeamPlayers() {
             </p>
           </div>
         )}
+
+        {error && <div className="alert alert-danger mt-3 mb-0">{error}</div>}
 
         {/* PLAYERS HEADER + ADD BUTTON */}
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">

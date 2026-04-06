@@ -1,4 +1,3 @@
-
 // export default EditTeam;
 import React, { useEffect, useState } from "react";
 import api from "../../api";
@@ -8,6 +7,7 @@ import "../../styles/layout.css";
 function EditTeam() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const [team, setTeam] = useState({
     teamId: "",
@@ -18,24 +18,41 @@ function EditTeam() {
   });
 
   useEffect(() => {
-    api.get(`/teams/${id}`).then((res) => setTeam(res.data));
+    const fetchTeam = async () => {
+      try {
+        setError("");
+        const res = await api.get(`/teams/${id}`);
+        setTeam(res.data || team);
+      } catch (err) {
+        setError(err.message || "Unable to load team.");
+      }
+    };
+
+    fetchTeam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleChange = (e) =>
     setTeam({ ...team, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.put(`/teams/${id}`, team).then(() => navigate("/teams"));
+    try {
+      setError("");
+      await api.put(`/teams/${id}`, team);
+      navigate("/teams");
+    } catch (err) {
+      setError(err.message || "Unable to update team.");
+    }
   };
 
   return (
     <div className="container mt-4" style={{ maxWidth: "700px" }}>
       <div className="card shadow-sm p-4">
-
         <h3 className="text-center fw-bold mb-4">Edit Team</h3>
 
         <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-danger">{error}</div>}
 
           <div className="row mb-3 align-items-center">
             <label className="col-3 col-form-label fw-semibold">Team ID</label>
@@ -52,7 +69,9 @@ function EditTeam() {
 
           {/* Team Name */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Team Name</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Team Name
+            </label>
             <div className="col-9">
               <input
                 name="teamName"
@@ -67,7 +86,9 @@ function EditTeam() {
 
           {/* Team City */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Team City</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Team City
+            </label>
             <div className="col-9">
               <input
                 name="teamCity"
@@ -82,7 +103,9 @@ function EditTeam() {
 
           {/* Founded Year */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Founded Year</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Founded Year
+            </label>
             <div className="col-9">
               <input
                 name="teamFounded"
@@ -98,7 +121,9 @@ function EditTeam() {
 
           {/* Coach Name */}
           <div className="row mb-3 align-items-center">
-            <label className="col-3 col-form-label fw-semibold">Coach Name</label>
+            <label className="col-3 col-form-label fw-semibold">
+              Coach Name
+            </label>
             <div className="col-9">
               <input
                 name="coachName"

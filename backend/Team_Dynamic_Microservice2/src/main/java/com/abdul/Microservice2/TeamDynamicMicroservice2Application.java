@@ -23,7 +23,7 @@ public class TeamDynamicMicroservice2Application {
 		
 		//System.setProperty("spring.config.name", "Team-Dynamic-Microservice2");
 		
-		System.out.println("Microservice 2 Started on Port 8084...");
+			 System.out.println("Spring Boot application for Team Dynamic Microservice 2 has started successfully.");
     }
 
     @Bean

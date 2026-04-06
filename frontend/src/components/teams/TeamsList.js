@@ -16,18 +16,31 @@ import {
 
 function TeamsList() {
   const [teams, setTeams] = useState([]);
+  const [error, setError] = useState("");
 
-  const loadTeams = () => {
-    api.get("/teams").then((res) => setTeams(res.data));
+  const loadTeams = async () => {
+    try {
+      setError("");
+      const res = await api.get("/teams");
+      setTeams(res.data || []);
+    } catch (err) {
+      setTeams([]);
+      setError(err.message || "Unable to load teams.");
+    }
   };
 
   useEffect(() => {
     loadTeams();
   }, []);
 
-  const deleteTeam = (id) => {
+  const deleteTeam = async (id) => {
     if (window.confirm("Are you sure you want to delete this team?")) {
-      api.delete(`/teams/${id}`).then(() => loadTeams());
+      try {
+        await api.delete(`/teams/${id}`);
+        loadTeams();
+      } catch (err) {
+        window.alert(err.message || "Unable to delete team.");
+      }
     }
   };
 
@@ -45,6 +58,8 @@ function TeamsList() {
           Add Team
         </Link>
       </div>
+
+      {error && <div className="alert alert-danger">{error}</div>}
 
       {/* Teams Grid */}
       {teams.length > 0 ? (

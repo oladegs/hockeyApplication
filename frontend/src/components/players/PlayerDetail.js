@@ -32,12 +32,15 @@ function PlayerDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!player) return;
     if (window.confirm("Are you sure you want to delete this player?")) {
-      api.delete(`/players/${player.playerId}`).then(() => {
+      try {
+        await api.delete(`/players/${player.playerId}`);
         window.location.href = "/players";
-      });
+      } catch (err) {
+        setError(err.message || "Unable to delete player.");
+      }
     }
   };
 
